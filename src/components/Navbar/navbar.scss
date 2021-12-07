@@ -1,0 +1,14 @@
+@import "../../common/styles/colors.scss";
+
+.navbar-container {
+  width: 20%;
+  padding: 100px 40px 0px 40px;
+  background-color: $grey100;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.nav-link-container {
+  margin: 8px 0px;
+}

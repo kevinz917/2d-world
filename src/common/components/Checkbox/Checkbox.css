@@ -1,0 +1,81 @@
+.checkbox-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.checkbox-label {
+  margin-left: 12px;
+}
+
+.input-checkbox {
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+}
+
+.main {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Hide default checkbox */
+input[type='checkbox'] {
+  visibility: hidden;
+}
+
+.checkbox-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: white;
+  border-radius: 4px;
+  border: 2px solid rgb(173, 173, 173);
+}
+
+/* hover state */
+.main:hover input ~ .checkbox-mark {
+}
+
+/* active  state*/
+.main input:active ~ .checkbox-mark {
+}
+
+/* checked state */
+.main input:checked ~ .checkbox-mark {
+  border: 2px solid #e93689;
+  background-color: #e93689;
+}
+
+/* checkmark symbol */
+.checkbox-mark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* display checkmark when checked */
+.main input:checked ~ .checkbox-mark:after {
+  display: block;
+}
+
+/* Styling the checkmark using webkit */
+/* Rotated the rectangle by 45 degree and 
+showing only two border to make it look
+like a tickmark */
+.main .checkbox-mark:after {
+  left: 5px;
+  bottom: 3px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
