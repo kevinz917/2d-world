@@ -1,0 +1,19 @@
+.map-page-container {
+  padding: 60px;
+}
+
+.map-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.square-container {
+  width: 10px;
+  height: 10px;
+  border: 0.2px solid rgb(226, 226, 226);
+}
+
+.square-filled {
+  background-color: black;
+}

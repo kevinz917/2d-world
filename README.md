@@ -1,12 +1,3 @@
-# Kevin's Frontend Template 🧊
+# 2D World Generator 🗺️
 
-- A comprehensive, flexible front end template for real scalable web apps. 
-- Hopefully use this for future startups 
-
-
-## Architecture
-
-- Typescript
-- Redux + Redux Saga for data flow
-- Redux selectors
-- SASS / CSS
+Procedurally generated world with cellular automata
