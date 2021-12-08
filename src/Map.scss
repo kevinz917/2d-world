@@ -1,5 +1,8 @@
 .map-page-container {
   padding: 60px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .map-row {
@@ -8,12 +11,33 @@
   align-items: center;
 }
 
+.control-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .square-container {
-  width: 10px;
-  height: 10px;
-  border: 0.2px solid rgb(226, 226, 226);
+  width: 5px;
+  height: 5px;
+  background-color: black;
+  // border: 0.1px solid rgb(240, 240, 240);
 }
 
 .square-filled {
-  background-color: black;
+  background-color: rgb(8, 247, 48) !important;
+  position: absolute;
+}
+
+.virus-last-1 {
+  background-color: rgb(0, 90, 15);
+  position: absolute;
+}
+
+// new board new rendering method
+.Board {
+  position: relative;
+  margin: 0 auto;
+  background-color: #000;
+  background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
 }

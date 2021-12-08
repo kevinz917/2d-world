@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 import { MAP_ACTIONS } from './mapActions';
 
-export const MAP_WIDTH = 50;
-export const MAP_HEIGHT = 50;
+export const MAP_WIDTH = 100;
+export const MAP_HEIGHT = 100;
 
 export interface mapState {
   map: number[][];

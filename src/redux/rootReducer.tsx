@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { testReducer } from '../modules/test/testReducer';
 import { mapReducer, mapState } from '../modules/map/mapReducer';
 
 export interface masterState {
@@ -7,7 +6,6 @@ export interface masterState {
 }
 
 const MasterReducer = combineReducers({
-  test: testReducer,
   map: mapReducer,
 });
 

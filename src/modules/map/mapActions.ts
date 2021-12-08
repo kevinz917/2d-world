@@ -1,4 +1,4 @@
-import { Action } from '../../common/types/Action';
+import { Action } from '../../redux/types';
 import actionCreator from '../../redux/actionCreator';
 
 export const MAP_ACTIONS = {
