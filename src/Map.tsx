@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MAP_WIDTH, MAP_HEIGHT } from './modules/map/mapReducer';
 import { generateNoiseMatrix, defaultLocations } from './util';
 import _ from 'lodash';
@@ -33,15 +33,16 @@ interface cellProps {
 // can be virus or normal terrain
 const Cell = (props: cellProps) => {
   const { y, x, isVirus, isTerrain, terrainDepth, isVirusLast1 } = props;
+
   return (
     <div
-      className={`${isVirusLast1 && 'virus-last-1'} ${isVirus && 'square-filled'}`}
+      className={`${isVirusLast1 && 'virus-last-1'} ${isVirus && 'square-filled'} square-position-absolute`}
       style={{
         left: `${CELL_SIZE * x + 1}px`,
         top: `${CELL_SIZE * y + 1}px`,
         width: `${CELL_SIZE - 1}px`,
         height: `${CELL_SIZE - 1}px`,
-        color: terrainDepth,
+        backgroundColor: terrainDepth,
       }}
     />
   );
@@ -65,6 +66,9 @@ const Map = (): React.ReactElement => {
   const [virusCells, setViruslCells] = useState<number[][]>([]);
   const [lastVirusCells, setLastVirusCells] = useState<number[][]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [ctx, setCtx] = useState(null);
+
+  const canvas: any = useRef();
 
   // initiate filled squares on map
   useEffect(() => {
@@ -72,13 +76,24 @@ const Map = (): React.ReactElement => {
     setTerrainMap(_noiseMatrix);
   }, []);
 
-  useEffect(() => {
-    const handle = setInterval(updateMapNew, 100);
+  // useEffect(() => {
+  //   const handle = setInterval(updateMapNew, 100);
 
-    return () => {
-      clearInterval(handle);
-    };
-  });
+  //   return () => {
+  //     clearInterval(handle);
+  //   };
+  // });
+
+  useEffect(() => {
+    // dynamically assign the width and height to canvas
+    const canvasEle = canvas.current;
+    canvasEle.width = canvasEle.clientWidth;
+    canvasEle.height = canvasEle.clientHeight;
+
+    // get context of the canvas
+    const tempCtx = canvasEle.getContext('2d');
+    setCtx(tempCtx);
+  }, []);
 
   // update cell list according to map
   const makeCells = () => {
@@ -131,22 +146,62 @@ const Map = (): React.ReactElement => {
     setViruslCells(makeCells());
   };
 
+  const renderWorld = () => {
+    if (terrainMap) {
+      for (let y = 0; y < terrainMap.length; y++) {
+        for (let x = 0; x < terrainMap[0].length; x++) {
+          drawFillRect(
+            { x: CELL_SIZE * x + 1, y: CELL_SIZE * y + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
+            { backgroundColor: terrainMap[y][x] }
+          );
+        }
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   if (terrainMap && ctx) {
+  //     for (let y = 0; y < terrainMap.length; y++) {
+  //       for (let x = 0; x < terrainMap[0].length; x++) {
+  //         drawFillRect(
+  //           { x: CELL_SIZE * x + 1, y: CELL_SIZE * y + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
+  //           { backgroundColor: terrainMap[y][x] }
+  //         );
+  //       }
+  //     }
+  //   }
+  // }, [terrainMap, ctx]);
+
+  // draw rectangle with background
+  const drawFillRect = (info: any, style: any) => {
+    const { x, y, w, h } = info;
+    const { backgroundColor } = style;
+
+    const tempCtx: any = ctx;
+    tempCtx.beginPath();
+    tempCtx.fillStyle = depthColorSelector(backgroundColor);
+    tempCtx.fillRect(x, y, w, h);
+    setCtx(tempCtx);
+  };
+
   return (
     <div className="map-page-container">
       <h3>2D World</h3>
       <br />
 
-      <div className="Board" style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px` }}>
+      <canvas ref={canvas} width={500} height={500} />
+
+      {/* <div className="Board" style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px` }}>
         {lastVirusCells.map((cell: number[]) => (
           <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirusLast1 />
         ))}
-
+        
         {virusCells.map((cell: number[]) => (
           <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirus />
         ))}
 
-        {/* {terrainMap?.map((row: number[], y: number) => (
-          <div className="map-row" key={_.uniqueId()}>
+        {terrainMap?.map((row: number[], y: number) => (
+          <React.Fragment key={_.uniqueId()}>
             {row.map((val: number, x: number) => (
               <Cell
                 y={y}
@@ -156,9 +211,9 @@ const Map = (): React.ReactElement => {
                 terrainDepth={depthColorSelector(terrainMap ? terrainMap[y][x] : 0)}
               />
             ))}
-          </div>
-        ))} */}
-      </div>
+          </React.Fragment>
+        ))}
+      </div> */}
 
       <br />
       <div className="control-row">
@@ -170,6 +225,7 @@ const Map = (): React.ReactElement => {
         >
           Play
         </button>
+        <button onClick={() => renderWorld()}>Render World</button>
       </div>
     </div>
   );
