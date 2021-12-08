@@ -4,6 +4,10 @@ import { generateNoiseMatrix, defaultLocations } from './util';
 import _ from 'lodash';
 import './Map.scss';
 
+// TODO:
+// - Add L system for roads, maybe invert roads so all on-land
+// - Add voronoi texture to blocks, maybe as vines or what not. make blocks bigger
+
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -27,9 +31,7 @@ const generateNewMap = (): number[][] => {
 
 const generateDefaultMap = (): number[][] => {
   const newMap = generateNewMap();
-
   defaultLocations.forEach((location: number[]) => (newMap[location[0]][location[1]] = 1));
-
   return newMap;
 };
 
@@ -48,14 +50,6 @@ const Map = (): React.ReactElement => {
     const _noiseMatrix: number[][] = generateNoiseMatrix();
     setTerrainMap(_noiseMatrix);
   }, []);
-
-  // useEffect(() => {
-  //   const handle = setInterval(updateMapNew, 100);
-
-  //   return () => {
-  //     clearInterval(handle);
-  //   };
-  // });
 
   useEffect(() => {
     // dynamically assign the width and height to canvas
