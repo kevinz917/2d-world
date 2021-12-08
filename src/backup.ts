@@ -148,3 +148,56 @@ export const random = 1;
 
 // // map terrain
 // // style={{ backgroundColor: depthColorSelector(terrainMap ? terrainMap[y][x] : 0) }}
+
+// can be virus or normal terrain
+// const Cell = (props: cellProps) => {
+//   const { y, x, isVirus, isTerrain, terrainDepth, isVirusLast1 } = props;
+
+// interface cellProps {
+//   x: number;
+//   y: number;
+//   isVirus?: boolean;
+//   isVirusLast1?: boolean;
+//   isTerrain?: boolean;
+//   terrainDepth?: string;
+// }
+
+//   return (
+//     <div
+//       className={`${isVirusLast1 && 'virus-last-1'} ${isVirus && 'square-filled'} square-position-absolute`}
+//       style={{
+//         left: `${CELL_SIZE * x + 1}px`,
+//         top: `${CELL_SIZE * y + 1}px`,
+//         width: `${CELL_SIZE - 1}px`,
+//         height: `${CELL_SIZE - 1}px`,
+//         backgroundColor: terrainDepth,
+//       }}
+//     />
+//   );
+// };
+
+{
+  /* <div className="Board" style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px` }}>
+        {lastVirusCells.map((cell: number[]) => (
+          <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirusLast1 />
+        ))}
+        
+        {virusCells.map((cell: number[]) => (
+          <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirus />
+        ))}
+
+        {terrainMap?.map((row: number[], y: number) => (
+          <React.Fragment key={_.uniqueId()}>
+            {row.map((val: number, x: number) => (
+              <Cell
+                y={y}
+                x={x}
+                key={_.uniqueId()}
+                isTerrain
+                terrainDepth={depthColorSelector(terrainMap ? terrainMap[y][x] : 0)}
+              />
+            ))}
+          </React.Fragment>
+        ))}
+      </div> */
+}

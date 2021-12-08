@@ -21,33 +21,6 @@ const CELL_SIZE = 5;
 const WIDTH = 500;
 const HEIGHT = 500;
 
-interface cellProps {
-  x: number;
-  y: number;
-  isVirus?: boolean;
-  isVirusLast1?: boolean;
-  isTerrain?: boolean;
-  terrainDepth?: string;
-}
-
-// can be virus or normal terrain
-const Cell = (props: cellProps) => {
-  const { y, x, isVirus, isTerrain, terrainDepth, isVirusLast1 } = props;
-
-  return (
-    <div
-      className={`${isVirusLast1 && 'virus-last-1'} ${isVirus && 'square-filled'} square-position-absolute`}
-      style={{
-        left: `${CELL_SIZE * x + 1}px`,
-        top: `${CELL_SIZE * y + 1}px`,
-        width: `${CELL_SIZE - 1}px`,
-        height: `${CELL_SIZE - 1}px`,
-        backgroundColor: terrainDepth,
-      }}
-    />
-  );
-};
-
 const generateNewMap = (): number[][] => {
   return new Array(MAP_HEIGHT).fill(0).map(() => new Array(MAP_WIDTH).fill(0));
 };
@@ -146,31 +119,19 @@ const Map = (): React.ReactElement => {
     setViruslCells(makeCells());
   };
 
+  // initial render world
   const renderWorld = () => {
     if (terrainMap) {
       for (let y = 0; y < terrainMap.length; y++) {
         for (let x = 0; x < terrainMap[0].length; x++) {
           drawFillRect(
             { x: CELL_SIZE * x + 1, y: CELL_SIZE * y + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
-            { backgroundColor: terrainMap[y][x] }
+            { backgroundColor: depthColorSelector(terrainMap[y][x]) }
           );
         }
       }
     }
   };
-
-  // useEffect(() => {
-  //   if (terrainMap && ctx) {
-  //     for (let y = 0; y < terrainMap.length; y++) {
-  //       for (let x = 0; x < terrainMap[0].length; x++) {
-  //         drawFillRect(
-  //           { x: CELL_SIZE * x + 1, y: CELL_SIZE * y + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
-  //           { backgroundColor: terrainMap[y][x] }
-  //         );
-  //       }
-  //     }
-  //   }
-  // }, [terrainMap, ctx]);
 
   // draw rectangle with background
   const drawFillRect = (info: any, style: any) => {
@@ -179,41 +140,44 @@ const Map = (): React.ReactElement => {
 
     const tempCtx: any = ctx;
     tempCtx.beginPath();
-    tempCtx.fillStyle = depthColorSelector(backgroundColor);
+    tempCtx.fillStyle = backgroundColor;
     tempCtx.fillRect(x, y, w, h);
     setCtx(tempCtx);
   };
+
+  const clearRect = (info: any) => {
+    const { x, y, w, h } = info;
+
+    const tempCtx: any = ctx;
+    tempCtx.clearRect(x, y, w, h);
+    setCtx(tempCtx);
+  };
+
+  useEffect(() => {
+    // clear last cells
+    lastVirusCells.map((cellLocation: number[]) => {
+      clearRect({
+        x: CELL_SIZE * cellLocation[1] + 1,
+        y: CELL_SIZE * cellLocation[0] + 1,
+        w: CELL_SIZE - 1,
+        h: CELL_SIZE - 1,
+      });
+    });
+
+    virusCells.map((cellLocation: number[]) => {
+      drawFillRect(
+        { x: CELL_SIZE * cellLocation[1] + 1, y: CELL_SIZE * cellLocation[0] + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
+        { backgroundColor: '#00FF1D' }
+      );
+    });
+  }, [virusCells]);
 
   return (
     <div className="map-page-container">
       <h3>2D World</h3>
       <br />
 
-      <canvas ref={canvas} width={500} height={500} />
-
-      {/* <div className="Board" style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px` }}>
-        {lastVirusCells.map((cell: number[]) => (
-          <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirusLast1 />
-        ))}
-        
-        {virusCells.map((cell: number[]) => (
-          <Cell y={cell[0]} x={cell[1]} key={_.uniqueId()} isVirus />
-        ))}
-
-        {terrainMap?.map((row: number[], y: number) => (
-          <React.Fragment key={_.uniqueId()}>
-            {row.map((val: number, x: number) => (
-              <Cell
-                y={y}
-                x={x}
-                key={_.uniqueId()}
-                isTerrain
-                terrainDepth={depthColorSelector(terrainMap ? terrainMap[y][x] : 0)}
-              />
-            ))}
-          </React.Fragment>
-        ))}
-      </div> */}
+      <canvas ref={canvas} width={WIDTH} height={HEIGHT} />
 
       <br />
       <div className="control-row">
