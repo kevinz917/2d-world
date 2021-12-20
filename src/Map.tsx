@@ -12,6 +12,8 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const GRID_SPACING = 0;
+
 const depthColorSelector = (_noiseValue: number) => {
   const roundedVal = Number(_noiseValue.toFixed(1));
   if (roundedVal > 0.8) return '#637D3D';
@@ -119,7 +121,12 @@ const Map = (): React.ReactElement => {
       for (let y = 0; y < terrainMap.length; y++) {
         for (let x = 0; x < terrainMap[0].length; x++) {
           drawFillRect(
-            { x: CELL_SIZE * x + 1, y: CELL_SIZE * y + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
+            {
+              x: CELL_SIZE * x + GRID_SPACING,
+              y: CELL_SIZE * y + GRID_SPACING,
+              w: CELL_SIZE - GRID_SPACING,
+              h: CELL_SIZE - GRID_SPACING,
+            },
             { backgroundColor: depthColorSelector(terrainMap[y][x]) }
           );
         }
@@ -151,24 +158,43 @@ const Map = (): React.ReactElement => {
     // clear last cells
     lastVirusCells.map((cellLocation: number[]) => {
       clearRect({
-        x: CELL_SIZE * cellLocation[1] + 1,
-        y: CELL_SIZE * cellLocation[0] + 1,
-        w: CELL_SIZE - 1,
-        h: CELL_SIZE - 1,
+        x: CELL_SIZE * cellLocation[1] + GRID_SPACING,
+        y: CELL_SIZE * cellLocation[0] + GRID_SPACING,
+        w: CELL_SIZE - GRID_SPACING,
+        h: CELL_SIZE - GRID_SPACING,
       });
     });
 
     virusCells.map((cellLocation: number[]) => {
       drawFillRect(
-        { x: CELL_SIZE * cellLocation[1] + 1, y: CELL_SIZE * cellLocation[0] + 1, w: CELL_SIZE - 1, h: CELL_SIZE - 1 },
+        {
+          x: CELL_SIZE * cellLocation[1] + GRID_SPACING,
+          y: CELL_SIZE * cellLocation[0] + GRID_SPACING,
+          w: CELL_SIZE - GRID_SPACING,
+          h: CELL_SIZE - GRID_SPACING,
+        },
         { backgroundColor: '#00FF1D' }
       );
     });
   }, [virusCells]);
 
+  // render map
+  useEffect(() => {
+    renderWorld();
+  }, [terrainMap]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateMapNew();
+      console.log('Spreading virus!! ');
+    }, 10);
+    return () => clearInterval(interval);
+  }, [newMapState]);
+
   return (
     <div className="map-page-container">
       <h3>2D World</h3>
+      <div>Refresh page to restart animation</div>
       <br />
 
       <canvas ref={canvas} width={WIDTH} height={HEIGHT} />
